@@ -4,7 +4,16 @@ Write-Host $Boxstarter['ScriptToCall']
 
 Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives -EnableShowProtectedOSFiles -EnableShowFileExtensions
 
+# Disable Password Caching
+Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" "DisablePasswordCaching" 1
+
 Enable-RemoteDesktop
+
+# Configure Power Plan Settings
+powercfg /X monitor-timeout-ac 5
+powercfg /X monitor-timeout-dc 5
+powercfg /X standby-timeout-ac 5
+powercfg /X standby-timeout-dc 0
 
 Install-PackageProvider NuGet -MinimumVersion '2.8.5.201' -Force
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
@@ -309,8 +318,35 @@ pip install matplotlib
 pip install tensorflow
 pip install keras
 
-#--- Enable developer mode on the system ---
-Set-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\AppModelUnlock -Name AllowDevelopmentWithoutDevLicense -Value 1
+
+# Enable Developer Mode
+Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" "AllowDevelopmentWithoutDevLicense" 1
+
+
+# ################################################################################
+# ### PowerShell                                                                 #
+# ################################################################################
+
+# # Link Profile to the one inside this repo.
+# if (Test-Path "$profile") { Remove-Item "$profile" }
+# New-Item -Path "$profile" -ItemType SymbolicLink -Value "$HOME\.dotfiles\powershell\Microsoft.PowerShell_profile.ps1" -Force
+
+# ################################################################################
+# ### Bash                                                                       #
+# ################################################################################
+
+# if (Test-Path "$HOME\.bashrc") { Remove-Item "$HOME\.bashrc" }
+# New-Item -Path "$HOME\.bashrc" -ItemType SymbolicLink -Value "$HOME\.dotfiles\bash\.bashrc"
+
+# if (Test-Path "$HOME\.bash_profile") { Remove-Item "$HOME\.bash_profile" }
+# New-Item -Path "$HOME\.bash_profile" -ItemType SymbolicLink -Value "$HOME\.dotfiles\bash\.bash_profile"
+
+# ################################################################################
+# ### NPM                                                                        #
+# ################################################################################
+
+# if (Test-Path "$HOME\.npmrc") { Remove-Item "$HOME\.npmrc" }
+# New-Item -Path "$HOME\.npmrc" -ItemType SymbolicLink -Value "$HOME\.dotfiles\node\.npmrc"
 
 #Remove Apps
 Write-Output "Removing Apps"
