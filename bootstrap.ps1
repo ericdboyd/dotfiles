@@ -1,6 +1,26 @@
 
-Write-Host "Boxstarter[ScriptToCall]"
-Write-Host $Boxstarter['ScriptToCall']
+# Get the base URI path from the ScriptToCall value
+$bstrappackage = "-bootstrapPackage"
+$helperUri = $Boxstarter['ScriptToCall']
+$strpos = $helperUri.IndexOf($bstrappackage)
+$helperUri = $helperUri.Substring($strpos + $bstrappackage.Length)
+$helperUri = $helperUri.TrimStart("'", " ")
+$helperUri = $helperUri.TrimEnd("'", " ")
+$helperUri = $helperUri.Substring(0, $helperUri.LastIndexOf("/"))
+$helperUri += "/scripts"
+write-host "helper script base URI is $helperUri"
+
+function executeScript {
+    Param ([string]$script)
+    write-host "executing $helperUri/$script ..."
+	Invoke-Expression ((new-object net.webclient).DownloadString("$helperUri/$script"))
+}
+
+# #--- Setting up Windows ---
+# executeScript "SystemConfiguration.ps1";
+# executeScript "FileExplorerSettings.ps1";
+# executeScript "RemoveDefaultApps.ps1";
+# executeScript "CommonDevTools.ps1";
 
 Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives -EnableShowProtectedOSFiles -EnableShowFileExtensions
 
@@ -263,6 +283,8 @@ Foreach ($app in $appsToInstall) {
     }
 }
 
+# https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community
+# https://docs.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio#list-of-workload-ids-and-component-ids
 winget install --id Microsoft.VisualStudio.2022.Enterprise --override "--quiet --add Microsoft.Visualstudio.Workload.Azure;includeRecommended;includeOptional --add Microsoft.VisualStudio.Workload.Data;includeRecommended;includeOptional --add Microsoft.VisualStudio.Workload.DataScience;includeRecommended;includeOptional --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeRecommended;includeOptional --add Microsoft.VisualStudio.Workload.ManagedGame;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.NetCrossPlat;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.NetWeb;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.Node;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.Python;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.Universal;includeRecommended;includeOptional"
 
 # FileZilla isn't available in winget because it's can't be redistributed
@@ -359,3 +381,4 @@ Write-Output "Removing Apps"
 #   Get-AppxPackage -allusers $app | Remove-AppxPackage
 # }
 
+executeScript "scripts/Remove-DesktopShortcuts.ps1"
