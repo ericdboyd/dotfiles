@@ -2,16 +2,9 @@
 Write-Host "Boxstarter[ScriptToCall]"
 Write-Host $Boxstarter['ScriptToCall']
 
-Set-ExplorerOptions -showHiddenFilesFoldersDrives -showProtectedOSFiles -showFileExtensions
+Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives -EnableShowProtectedOSFiles -EnableShowFileExtensions
 
 Enable-RemoteDesktop
-
-#Enable-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-All -Online -NoRestart
-#Enable-WindowsOptionalFeature -FeatureName Containers -Online -NoRestart
-#Enable-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux -Online -NoRestart
-
-#Install Chocolatey
-# Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
 Install-PackageProvider NuGet -MinimumVersion '2.8.5.201' -Force
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
@@ -96,7 +89,7 @@ $appsToInstall = @(
     @{name = "Atlassian.Sourcetree"},
 
     @{name = "Docker.DockerDesktop" },
-    @{name = "Canonical.Ubuntu"},
+    @{id = "Canonical.Ubuntu"},
     @{name = "Canonical.Ubuntu.2204"},
     @{name = "openSUSE Leap 15.4"; source = "msstore"},
     @{name = "openSUSE Tumbleweed"; source = "msstore"},
@@ -132,12 +125,11 @@ $appsToInstall = @(
     @{name = "Dropbox.Dropbox"},
     @{name = "Telerik.Fiddler.Classic"},
     @{name = "Google.Chrome"},
-    @{name = "Mozilla.Firefox"},
+    @{name = "Mozilla Firefox"; id = "Mozilla.Firefox"},
     @{name = "LogMeIn.LastPass"},
     @{name = "NordVPN"},
     @{name = "Discord"; id = "Discord.Discord"},
     @{name = "WhatsApp"; id = "WhatsApp.WhatsApp"},
-    @{name = "Spotify"; id = "Spotify.Spotify"},
     
     @{name = "Microsoft Edge Dev"; id = "Microsoft.Edge.Dev"},
     @{name = "Microsoft Edge Beta"; id = "Microsoft.Edge.Beta"},
@@ -223,23 +215,38 @@ $appsToInstall = @(
 
 );
 Foreach ($app in $appsToInstall) {
-    $listApp = winget list --exact -q $app.name
-    if (![String]::Join("", $listApp).Contains($app.name)) {
-        Write-host "Installing:" $app.name
-        if ($app.source -ne $null) {
-            if ($app.id -ne $null) {
-                winget install --exact --silent --id $app.id --source $app.source --accept-package-agreements --ignore-security-hash
+    $installApp = $true
+    if ($null -ne $app.id) {
+        Write-host "Checking:" $app.id
+        $listApp = winget list --id $app.id
+        if ([String]::Join("", $listApp).Contains($app.id)){
+            $installApp = $false
+        }
+    }
+    else {
+        Write-host "Checking:" $app.name
+        $listApp = winget list --exact -q $app.name
+        if ([String]::Join("", $listApp).Contains($app.name)){
+            $installApp = $false
+        }
+    }
+    
+    if ($installApp) {
+        Write-host "Installing:" $app.name "-" $app.id "-" $app.source
+        if ($null -ne $app.source) {
+            if ($null -ne $app.id) {
+                winget install --exact --silent --id $app.id --source $app.source --accept-package-agreements --accept-source-agreements --ignore-security-hash
             }
             else {
-                winget install --exact --silent --name $app.name --source $app.source --accept-package-agreements --ignore-security-hash
+                winget install --exact --silent --name $app.name --source $app.source --accept-package-agreements --accept-source-agreements --ignore-security-hash
             }
         }
         else {
-            if ($app.id -ne $null) {
-                winget install --exact --silent --id $app.id --accept-package-agreements --ignore-security-hash
+            if ($null -ne $app.id) {
+                winget install --exact --silent --id $app.id --accept-package-agreements --accept-source-agreements --ignore-security-hash
             }
             else {
-                winget install --exact --silent --name $app.name --accept-package-agreements --ignore-security-hash
+                winget install --exact --silent --name $app.name --accept-package-agreements --accept-source-agreements --ignore-security-hash
             }
         }
     }
@@ -250,12 +257,11 @@ Foreach ($app in $appsToInstall) {
 
 winget install --id Microsoft.VisualStudio.2022.Enterprise --override "--quiet --add Microsoft.Visualstudio.Workload.Azure;includeRecommended;includeOptional --add Microsoft.VisualStudio.Workload.Data;includeRecommended;includeOptional --add Microsoft.VisualStudio.Workload.DataScience;includeRecommended;includeOptional --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeRecommended;includeOptional --add Microsoft.VisualStudio.Workload.ManagedGame;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.NetCrossPlat;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.NetWeb;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.Node;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.Python;includeRecommended;includeOptional -add Microsoft.VisualStudio.Workload.Universal;includeRecommended;includeOptional"
 
+# FileZilla isn't available in winget because it's can't be redistributed
 choco install filezilla
+# Spotify doesn't install in elevated mode in winget
+choco install spotify
 choco install cascadia-code-nerd-font
-
-# Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/install.ps1'))
-
-# Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; & $([scriptblock]::Create((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/install.ps1'))) 'Cascadia Code'
 
 # Install-Module -AllowClobber Get-ChildItemColor
 Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
