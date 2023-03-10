@@ -8,12 +8,16 @@ $helperUri = $helperUri.TrimStart("'", " ")
 $helperUri = $helperUri.TrimEnd("'", " ")
 $helperUri = $helperUri.Substring(0, $helperUri.LastIndexOf("/"))
 $helperUri += "/scripts"
-write-host "helper script base URI is $helperUri"
+Write-Host "helper script base URI is $helperUri"
 
 function executeScript {
     Param ([string]$script)
-    write-host "executing $helperUri/$script ..."
-	Invoke-Expression ((new-object net.webclient).DownloadString("$helperUri/$script"))
+    
+    Write-Host ""
+    Write-Host "Executing $helperUri/$script ..." -ForegroundColor Green
+    Write-Host "------------------------------------" -ForegroundColor Green
+
+	Invoke-Expression ((New-Object net.webclient).DownloadString("$helperUri/$script"))
 }
 
 # #--- Setting up Windows ---
@@ -22,19 +26,9 @@ function executeScript {
 # executeScript "RemoveDefaultApps.ps1";
 # executeScript "CommonDevTools.ps1";
 
-Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives -EnableShowProtectedOSFiles -EnableShowFileExtensions
+executeScript "Configure-Windows.ps1";
 
-# Disable Password Caching
-Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" "DisablePasswordCaching" 1
-
-Enable-RemoteDesktop
-
-# Configure Power Plan Settings
-powercfg /X monitor-timeout-ac 5
-powercfg /X monitor-timeout-dc 5
-powercfg /X standby-timeout-ac 5
-powercfg /X standby-timeout-dc 0
-
+# Configure PSGallery
 Install-PackageProvider NuGet -MinimumVersion '2.8.5.201' -Force
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 
@@ -42,48 +36,7 @@ Install-Module posh-sshell
 
 choco install -y git --package-parameters="'/GitAndUnixToolsOnPath /WindowsTerminal'"
 
-#Install WinGet
-#Based on this gist: https://gist.github.com/crutkas/6c2096eae387e544bd05cde246f23901
-$hasPackageManager = Get-AppPackage -name 'Microsoft.DesktopAppInstaller'
-if (!$hasPackageManager -or [version]$hasPackageManager.Version -lt [version]"1.10.0.0") {
-    "Installing winget Dependencies"
-    
-    Add-AppxPackage -Path 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
-    
-    # Microsoft.UI.Xaml.2.7_7.2109.13004.0_x64__8wekyb3d8bbwe.Appx
-    Add-AppxPackage -Path 'http://tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/de44abf4-d2ba-4197-a139-85c485d58e0b?P1=1678125670&P2=404&P3=2&P4=D8ZIcnWwi0tKLRmbXqkj4WoM%2fqyYaq4KOo%2b38lxAlh6FPPsZPxlbIj%2fxgmkyOcgRLX3iKufakQCaAzyff3TiUA%3d%3d'
-    
-
-    $releases_url = 'https://api.github.com/repos/microsoft/winget-cli/releases/latest'
-
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $releases = Invoke-RestMethod -uri $releases_url
-    $latestRelease = $releases.assets | Where { $_.browser_download_url.EndsWith('msixbundle') } | Select -First 1
-
-    "Installing winget from $($latestRelease.browser_download_url)"
-    Add-AppxPackage -Path $latestRelease.browser_download_url
-}
-else {
-    "winget already installed"
-}
-
-#Configure WinGet
-Write-Output "Configuring winget"
-
-#winget config path from: https://github.com/microsoft/winget-cli/blob/master/doc/Settings.md#file-location
-$settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json";
-$settingsJson = 
-@"
-    {
-        // For documentation on these settings, see: https://aka.ms/winget-settings
-        "experimentalFeatures": {
-          "experimentalMSStore": true,
-        }
-    }
-"@;
-# $settingsJson | Out-File $settingsPath -Encoding utf8
-
-winget settings --enable InstallerHashOverride 
+executeScript "Configure-WinGet.ps1";
 
 #Install New apps
 Write-Output "Installing Apps"
@@ -117,19 +70,11 @@ $appsToInstall = @(
     @{id = "GitHub.GitHubDesktop"},
     @{id = "Atlassian.Sourcetree"},
 
-    @{id = "Docker.DockerDesktop" },
-    @{id = "Canonical.Ubuntu.2204"},
-    @{name = "openSUSE Leap 15.4"; source = "msstore"},
-    @{name = "openSUSE Tumbleweed"; source = "msstore"},
-    @{id = "kalilinux.kalilinux"},
-    @{id = "Debian.Debian"},
-    @{id = "SuperTux.SuperTux"},
-    @{id = "whitewaterfoundry.fedora-remix-for-wsl"},
+    @{id = "Docker.DockerDesktop" },    
     @{id = "suse.RancherDesktop"},
     
     @{id = "Wox.Wox"},
     @{id = "gerardog.gsudo"},
-    @{id = "AutoHotkey.AutoHotkey"},
     @{id = "QL-Win.QuickLook"},
     @{id = "Bitvise.SSH.Client"},
     @{id = "Microsoft.OpenSSH.Beta"},
@@ -223,9 +168,6 @@ $appsToInstall = @(
     @{id = "Microsoft.WindowsPCHealthCheck"},
     @{id = "mRemoteNG.mRemoteNG"},
 
-    @{id = "Elgato.StreamDeck"},
-    @{id = "Elgato.ControlCenter"},
-
     @{name = "Logitech G HUB"; id = "Logitech.GHUB"},
     @{id = "Logitech.CameraSettings"},
     
@@ -242,17 +184,21 @@ $appsToInstall = @(
     @{id = "GNU.MidnightCommander"}
 
 );
+
+# Failing asking for install location
+# @{id = "AutoHotkey.AutoHotkey"},
+
 Foreach ($app in $appsToInstall) {
     $installApp = $true
     if ($null -ne $app.id) {
-        Write-host "Checking:" $app.id
+        Write-Host "Checking:" $app.id
         $listApp = winget list --id $app.id
         if ([String]::Join("", $listApp).Contains($app.id)){
             $installApp = $false
         }
     }
     else {
-        Write-host "Checking:" $app.name
+        Write-Host "Checking:" $app.name
         $listApp = winget list --exact -q $app.name
         if ([String]::Join("", $listApp).Contains($app.name)){
             $installApp = $false
@@ -260,7 +206,7 @@ Foreach ($app in $appsToInstall) {
     }
     
     if ($installApp) {
-        Write-host "Installing:" $app.name "-" $app.id "-" $app.source
+        Write-Host "Installing:" $app.name "-" $app.id "-" $app.source
         if ($null -ne $app.source) {
             if ($null -ne $app.id) {
                 winget install --exact --silent --id $app.id --source $app.source --accept-package-agreements --accept-source-agreements --ignore-security-hash
@@ -279,9 +225,28 @@ Foreach ($app in $appsToInstall) {
         }
     }
     else {
-        Write-host "Skipping Install of " $app.name
+        Write-Host "Skipping Install of " $app.name
     }
 }
+
+executeScript "Install-WingetAppsFunction.ps1";
+
+$elgatoApps = @(
+    @{id = "Elgato.StreamDeck"},
+    @{id = "Elgato.ControlCenter"}
+)
+Install-WingetApps $elgatoApps
+
+$wslDistros = @(
+    @{id = "Canonical.Ubuntu.2204"},
+    @{name = "openSUSE Leap 15.4"; source = "msstore"},
+    @{name = "openSUSE Tumbleweed"; source = "msstore"},
+    @{id = "kalilinux.kalilinux"},
+    @{id = "Debian.Debian"},
+    @{id = "SuperTux.SuperTux"},
+    @{id = "whitewaterfoundry.fedora-remix-for-wsl"}
+)
+Install-WingetApps $wslDistros
 
 # https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community
 # https://docs.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio#list-of-workload-ids-and-component-ids
@@ -303,20 +268,8 @@ Write-Host "Installing dotnet SDKs for Windows..." -ForegroundColor Green
 powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; &([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://dot.net/v1/dotnet-install.ps1'))) -Channel LTS"
 Enable-WindowsOptionalFeature -Online -FeatureName NetFx3
 
-# Install Hyper-V
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-Tools-All
-
-# -----------------------------------------------------------------------------
-# Install WSL
-Write-Host ""
-Write-Host "Installing WSL..." -ForegroundColor Green
-Write-Host "------------------------------------" -ForegroundColor Green
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
-Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
-Enable-WindowsOptionalFeature -FeatureName Containers -Online -NoRestart
-
-wsl --set-default-version 2
+executeScript "Install-HyperV.ps1";
+executeScript "Install-WSL.ps1";
 
 # Configure Git
 # Permanently add C:\Program Files\Git\usr\bin to machine Path variable
@@ -340,9 +293,6 @@ pip install matplotlib
 pip install tensorflow
 pip install keras
 
-
-# Enable Developer Mode
-Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" "AllowDevelopmentWithoutDevLicense" 1
 
 
 # ################################################################################
@@ -377,7 +327,7 @@ Write-Output "Removing Apps"
 # $appsToRemove = $null
 # Foreach ($app in $appsToRemove)
 # {
-#   Write-host "Uninstalling:" $app
+#   Write-Host "Uninstalling:" $app
 #   Get-AppxPackage -allusers $app | Remove-AppxPackage
 # }
 

@@ -34,7 +34,14 @@ Disable OneDrive Backup.
 #### Docker  
 
 #### TechSmith
+
 Login and authorize SnagIt and Camtasia  
+
+#### Outlook
+
+Setup Outlook profile, email accounts, and manually point OST to appropriate location  
+Setup Signatures
+Setup Favorites
 
 ## Manual Install
 
