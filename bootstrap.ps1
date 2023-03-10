@@ -271,8 +271,10 @@ winget install --id Microsoft.VisualStudio.2022.Enterprise --override "--quiet -
 # FileZilla isn't available in winget because it's can't be redistributed
 choco install filezilla
 # Spotify doesn't install in elevated mode in winget
-choco install spotify
+choco install spotify --force
 choco install cascadia-code-nerd-font
+
+Install-Module -Name PowerShellGet -Force
 
 # Install-Module -AllowClobber Get-ChildItemColor
 Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
