@@ -28,7 +28,8 @@ function sourceScript {
     Write-Host "------------------------------------" -ForegroundColor Green
 
     $content = (Invoke-WebRequest -Uri "${helperUri}/${script}").Content
-    . ([Scriptblock]::Create($content))
+    $scriptBlock = [Scriptblock]::Create($content)
+    return $scriptBlock
 }
 
 # #--- Setting up Windows ---
@@ -108,6 +109,8 @@ $appsToInstall = @(
     @{id = "ScooterSoftware.BeyondCompare4"},
     @{id = "Dropbox.Dropbox"},
     @{id = "Telerik.Fiddler.Classic"},
+    @{id = "Telerik.Fiddler.Everywhere"},
+    @{id = "Telerik.Fiddler.Everywhere.Insiders"},
     @{id = "Google.Chrome"},
     @{name = "Mozilla Firefox"; id = "Mozilla.Firefox"},
     @{id = "LogMeIn.LastPass"},
@@ -192,7 +195,9 @@ $appsToInstall = @(
     @{name = "The Silver Searcher"},
     
     @{id = "Ghisler.TotalCommander"},
-    @{id = "GNU.MidnightCommander"}
+    @{id = "GNU.MidnightCommander"},
+
+    @{name = "Harvest Time Tracker"; id = "9PBLBM45RJQJ"; source = "msstore"}
 
 );
 
@@ -240,7 +245,7 @@ Foreach ($app in $appsToInstall) {
     }
 }
 
-sourceScript "Install-WingetAppsFunction.ps1";
+. (sourceScript "Install-WingetAppsFunction.ps1")
 
 $elgatoApps = @(
     @{id = "Elgato.StreamDeck"},
