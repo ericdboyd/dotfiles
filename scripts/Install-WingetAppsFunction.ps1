@@ -41,7 +41,7 @@ function Install-WingetApps {
             }
         }
         else {
-            Write-Host "Skipping Install of " $app.name
+            Write-Host "Skipping Install of name:" $app.name " id:" $app.id " source:" + $app.source
         }
     }
 }

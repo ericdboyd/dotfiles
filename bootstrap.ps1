@@ -27,7 +27,8 @@ function sourceScript {
     Write-Host "Sourcing $helperUri/$script ..." -ForegroundColor Green
     Write-Host "------------------------------------" -ForegroundColor Green
 
-    . ([Scriptblock]::Create((([System.Text.Encoding]::ASCII).getString((Invoke-WebRequest -Uri "${helperUri}/${script}").Content))))
+    $content = (Invoke-WebRequest -Uri "${helperUri}/${script}").Content
+    . ([Scriptblock]::Create($content))
 }
 
 # #--- Setting up Windows ---
