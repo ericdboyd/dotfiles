@@ -20,6 +20,16 @@ function executeScript {
 	Invoke-Expression ((New-Object net.webclient).DownloadString("$helperUri/$script"))
 }
 
+function sourceScript {
+    Param ([string]$script)
+
+    Write-Host ""
+    Write-Host "Sourcing $helperUri/$script ..." -ForegroundColor Green
+    Write-Host "------------------------------------" -ForegroundColor Green
+
+    . ([Scriptblock]::Create((([System.Text.Encoding]::ASCII).getString((Invoke-WebRequest -Uri "${helperUri}/${script}").Content))))
+}
+
 # #--- Setting up Windows ---
 # executeScript "SystemConfiguration.ps1";
 # executeScript "FileExplorerSettings.ps1";
@@ -229,7 +239,7 @@ Foreach ($app in $appsToInstall) {
     }
 }
 
-executeScript "Install-WingetAppsFunction.ps1";
+sourceScript "Install-WingetAppsFunction.ps1";
 
 $elgatoApps = @(
     @{id = "Elgato.StreamDeck"},
