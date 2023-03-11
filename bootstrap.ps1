@@ -278,7 +278,7 @@ Install-Module -Name PowerShellGet -Force
 
 # Install-Module -AllowClobber Get-ChildItemColor
 Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
+# Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
 
 # -----------------------------------------------------------------------------
 # Install dotnet sdk
