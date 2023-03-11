@@ -1,4 +1,3 @@
-
 # Get the base URI path from the ScriptToCall value
 $bstrappackage = "-bootstrapPackage"
 $helperUri = $Boxstarter['ScriptToCall']
@@ -39,16 +38,28 @@ function sourceScript {
 # executeScript "CommonDevTools.ps1";
 
 executeScript "Configure-Windows.ps1";
+executeScript "Configure-Power.ps1";
 
 # Configure PSGallery
 Install-PackageProvider NuGet -MinimumVersion '2.8.5.201' -Force
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+
+# PowerShellGet. Do this early as reboots are required
+if (-not (Get-InstalledModule -Name PowerShellGet -ErrorAction SilentlyContinue)) {
+    Write-Host "Install-Module PowerShellGet"
+    Install-Module -Name "PowerShellGet" -AllowClobber -Force -Scope AllUsers
+
+    # Exit equivalent
+    Invoke-Reboot
+}
 
 Install-Module posh-sshell
 
 choco install -y git --package-parameters="'/GitAndUnixToolsOnPath /WindowsTerminal'"
 
 executeScript "Configure-WinGet.ps1";
+
+. (sourceScript "Install-WingetAppsFunction.ps1")
 
 #Install New apps
 Write-Output "Installing Apps"
@@ -156,6 +167,9 @@ $appsToInstall = @(
 
     @{id = "Python.Python.2"},
     @{id = "Python.Python.3.11"},
+    @{id = "Python.Python.3.12"},
+    @{id = "Python.Python.3.10"},
+    @{id = "Python.Python.3.9"},
     @{id = "OpenJS.NodeJS.LTS"},
     @{name = "JetBrains ReSharper"; id = "JetBrains.ReSharper"},
     @{id = "JetBrains.Toolbox"},
@@ -201,51 +215,10 @@ $appsToInstall = @(
 
 );
 
+Install-WingetApps $appsToInstall
+
 # Failing asking for install location
 # @{id = "AutoHotkey.AutoHotkey"},
-
-Foreach ($app in $appsToInstall) {
-    $installApp = $true
-    if ($null -ne $app.id) {
-        Write-Host "Checking:" $app.id
-        $listApp = winget list --id $app.id
-        if ([String]::Join("", $listApp).Contains($app.id)){
-            $installApp = $false
-        }
-    }
-    else {
-        Write-Host "Checking:" $app.name
-        $listApp = winget list --exact -q $app.name
-        if ([String]::Join("", $listApp).Contains($app.name)){
-            $installApp = $false
-        }
-    }
-    
-    if ($installApp) {
-        Write-Host "Installing:" $app.name "-" $app.id "-" $app.source
-        if ($null -ne $app.source) {
-            if ($null -ne $app.id) {
-                winget install --exact --silent --id $app.id --source $app.source --accept-package-agreements --accept-source-agreements --ignore-security-hash
-            }
-            else {
-                winget install --exact --silent --name $app.name --source $app.source --accept-package-agreements --accept-source-agreements --ignore-security-hash
-            }
-        }
-        else {
-            if ($null -ne $app.id) {
-                winget install --exact --silent --id $app.id --accept-package-agreements --accept-source-agreements --ignore-security-hash
-            }
-            else {
-                winget install --exact --silent --name $app.name --accept-package-agreements --accept-source-agreements --ignore-security-hash
-            }
-        }
-    }
-    else {
-        Write-Host "Skipping Install of " $app.name
-    }
-}
-
-. (sourceScript "Install-WingetAppsFunction.ps1")
 
 $elgatoApps = @(
     @{id = "Elgato.StreamDeck"},
@@ -274,7 +247,7 @@ choco install filezilla
 choco install spotify --force
 choco install cascadia-code-nerd-font
 
-Install-Module -Name PowerShellGet -Force
+# Install-Module -Name PowerShellGet -Force
 
 # Install-Module -AllowClobber Get-ChildItemColor
 Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
@@ -293,12 +266,6 @@ executeScript "Install-WSL.ps1";
 # Permanently add C:\Program Files\Git\usr\bin to machine Path variable
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Git\usr\bin", "Machine")
 
-# Generate the key and put into the your user profile .ssh directory
-ssh-keygen -t rsa -b 4096 -C "$gitEmail" -f $env:USERPROFILE\.ssh\id_rsa
-
-# Copy the public key. Be sure to copy the .pub for the public key
-Get-Content $env:USERPROFILE\.ssh\id_rsa.pub | clip
-
 # python
 # Update pip
 python -m pip install --upgrade pip
@@ -310,8 +277,6 @@ pip install pandas
 pip install matplotlib
 pip install tensorflow
 pip install keras
-
-
 
 # ################################################################################
 # ### PowerShell                                                                 #

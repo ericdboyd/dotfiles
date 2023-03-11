@@ -22,7 +22,7 @@ function Install-WingetApps {
         }
     
         if ($installApp) {
-            Write-Host "Installing:" $app.name "-" $app.id "-" $app.source
+            Write-Host "Installing name:" $app.name " id:" $app.id " source:" $app.source
             if ($null -ne $app.source) {
                 if ($null -ne $app.id) {
                     winget install --exact --silent --id $app.id --source $app.source --accept-package-agreements --accept-source-agreements --ignore-security-hash
