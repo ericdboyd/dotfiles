@@ -54,12 +54,17 @@ if (-not (Get-InstalledModule -Name PowerShellGet -ErrorAction SilentlyContinue)
 }
 
 Install-Module posh-sshell
+Install-Module z -Force -Scope CurrentUser
+Install-Module posh-git -Force -Scope CurrentUser
+Install-Module Get-ChildItemColor -Force -Scope CurrentUser
+Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
+Install-Module -Name Terminal-Icons -Repository PSGallery -Force -Scope CurrentUser
 
 choco install -y git --package-parameters="'/GitAndUnixToolsOnPath /WindowsTerminal'"
 
 executeScript "Configure-WinGet.ps1";
 
-. (sourceScript "Install-WingetAppsFunction.ps1")
+. (sourceScript "functions/Install-WingetApps.ps1")
 
 #Install New apps
 Write-Output "Installing Apps"
@@ -148,6 +153,8 @@ $appsToInstall = @(
 
     @{id = "Microsoft.Office"},
     @{id = "Microsoft.OneDrive"},
+    @{name = "OneNote"; id = "XPFFZHVGQWWLHB"; source = "msstore" },
+    @{name = "OneNote for Windows 10"; id = "9WZDNCRFHVJL"; source = "msstore" },
 
     @{id = "OBSProject.OBSStudio"},
     
@@ -198,6 +205,7 @@ $appsToInstall = @(
 
     @{name = "Logitech G HUB"; id = "Logitech.GHUB"},
     @{id = "Logitech.CameraSettings"},
+    @{name = "Logi Options+"; id = "Logitech.Options"},
     
     @{id = "Microsoft.BingWallpaper"},
 
@@ -211,7 +219,8 @@ $appsToInstall = @(
     @{id = "Ghisler.TotalCommander"},
     @{id = "GNU.MidnightCommander"},
 
-    @{name = "Harvest Time Tracker"; id = "9PBLBM45RJQJ"; source = "msstore"}
+    @{name = "Harvest Time Tracker"; id = "9PBLBM45RJQJ"; source = "msstore"},
+    @{name = "NuGet Package Explorer"; id = "9WZDNCRDMDM3"; source = "msstore"}
 
 );
 
@@ -243,14 +252,15 @@ winget install --id Microsoft.VisualStudio.2022.Enterprise --override "--quiet -
 
 # FileZilla isn't available in winget because it's can't be redistributed
 choco install filezilla
+
+choco install syspin
+
 # Spotify doesn't install in elevated mode in winget
 choco install spotify --force
 choco install cascadia-code-nerd-font
 
-# Install-Module -Name PowerShellGet -Force
-
-# Install-Module -AllowClobber Get-ChildItemColor
-Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
+# Install-Module Get-ChildItemColor -AllowClobber
+# Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
 # Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
 
 # -----------------------------------------------------------------------------

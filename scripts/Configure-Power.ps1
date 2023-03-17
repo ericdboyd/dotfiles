@@ -20,5 +20,5 @@ powercfg -SETACVALUEINDEX $guidVal $powerButtonAndLidSettingsSubGroupGuid $lidSw
 # Configure Power Plan Timeout Settings
 powercfg /X monitor-timeout-ac 5
 powercfg /X monitor-timeout-dc 5
-powercfg /X standby-timeout-ac 5
-powercfg /X standby-timeout-dc 0
+powercfg /X standby-timeout-ac 0
+powercfg /X standby-timeout-dc 5

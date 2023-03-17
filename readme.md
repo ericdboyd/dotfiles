@@ -43,8 +43,20 @@ Setup Outlook profile, email accounts, and manually point OST to appropriate loc
 Setup Signatures
 Setup Favorites
 
+#### Edge
+
+Copy Profiles to %USERPROFILE%\AppData\Local\Microsoft\Edge\User Data\Default
+
+#### Elgato Stream Deck
+
+Install Icons  
+Install Plugins  
+Restore Backup  
+
 ## Manual Install
 
+### Edge Apps
+[Launch Edge Apps](edge://apps)
 ### Microsoft Project
 
 ### Microsoft Visio
