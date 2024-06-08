@@ -56,7 +56,24 @@ Restore Backup
 ## Manual Install
 
 ### Edge Apps
+
 [Launch Edge Apps](edge://apps)
+
 ### Microsoft Project
 
 ### Microsoft Visio
+
+### Adobe Creative Cloud
+
+### DaVinci Resolve
+
+
+### Utils
+
+MOBZHunt
+Cerebrata Cerulean
+OWASP Zed Attack Proxy
+USBPcap
+Roland GT1000
+Line6
+qFlipper

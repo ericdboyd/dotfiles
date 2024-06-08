@@ -5,7 +5,11 @@ Function Install-VS2022-Vsix {
 
         [String] $PackagePath = $null,
         
-        [String] $VSInstallDir = $null
+        [String] $VSInstallDir = $null,
+
+        [String] $VSVersion = "2022",
+
+        [String] $VSEdition = "Enterprise"
     )
  
     $ErrorActionPreference = "Stop"
@@ -28,7 +32,7 @@ Function Install-VS2022-Vsix {
     if (!$VSInstallDir) {
         # This is the path to VSIXInstaller.exe
         # Write-Host "Set VsInstallDir to default"
-        $VSInstallDir = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE" 
+        $VSInstallDir = "C:\Program Files\Microsoft Visual Studio\$VSVersion\$VSEdition\Common7\IDE" 
     }
  
     # Write-Host "VSInstallDir is $($VSInstallDir)"
