@@ -31,7 +31,7 @@ function sourceScript {
     return $scriptBlock
 }
 
-. (sourceScript "functions/Set-PathVaraible.ps1")
+. (sourceScript "functions/Set-PathVariable.ps1")
 
 # #--- Setting up Windows ---
 # executeScript "SystemConfiguration.ps1";
