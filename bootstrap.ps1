@@ -55,6 +55,8 @@ if (-not (Get-InstalledModule -Name PowerShellGet -ErrorAction SilentlyContinue)
     Invoke-Reboot
 }
 
+. (sourceScript "functions/Install-WingetApps.ps1")
+
 $terminalAppsToInstall = @(
     
     @{id = "Microsoft.PowerShell" },     
@@ -76,8 +78,6 @@ Install-Module -Name Terminal-Icons -Repository PSGallery -Force -Scope CurrentU
 Install-Module posh-sshell
 
 executeScript "Configure-WinGet.ps1";
-
-. (sourceScript "functions/Install-WingetApps.ps1")
 
 #Install New apps
 Write-Output "Installing Apps"
