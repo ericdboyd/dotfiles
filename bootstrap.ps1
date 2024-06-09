@@ -243,7 +243,8 @@ $appsToInstall = @(
     @{id = "Microsoft.BingWallpaper"},
 
     @{id = "TechSmith.Camtasia"},
-    @{name = "Snagit 2022"; id = "TechSmith.Snagit.2022"},
+    # @{name = "Snagit 2022"; id = "TechSmith.Snagit.2022"},
+    @{name = "Snagit 2024"; id = "TechSmith.Snagit.2024"},
 
     @{name = "Messenger"; source = "msstore"; id = "9WZDNCRF0083"},
 
