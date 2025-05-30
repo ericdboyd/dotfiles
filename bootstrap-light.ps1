@@ -80,6 +80,7 @@ Install-Module -Name Terminal-Icons -Repository PSGallery -Force -Scope CurrentU
 Install-Module posh-sshell
 
 # executeScript "Configure-WinGet.ps1";
+winget settings --enable InstallerHashOverride
 
 #Install New apps
 Write-Output "Installing Apps"
