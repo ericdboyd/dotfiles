@@ -3,7 +3,7 @@
 #Based on this gist: https://gist.github.com/crutkas/6c2096eae387e544bd05cde246f23901
 $hasPackageManager = Get-AppPackage -name 'Microsoft.DesktopAppInstaller'
 if (!$hasPackageManager -or [version]$hasPackageManager.Version -lt [version]"1.10.0.0") {
-    "Installing winget Dependencies"
+    Write-Output "Installing winget Dependencies"
     
     Add-AppxPackage -Path 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
     
@@ -16,11 +16,11 @@ if (!$hasPackageManager -or [version]$hasPackageManager.Version -lt [version]"1.
     $releases = Invoke-RestMethod -uri $releases_url
     $latestRelease = $releases.assets | Where { $_.browser_download_url.EndsWith('msixbundle') } | Select -First 1
 
-    "Installing winget from $($latestRelease.browser_download_url)"
+    Write-Output "Installing winget from $($latestRelease.browser_download_url)"
     Add-AppxPackage -Path $latestRelease.browser_download_url
 }
 else {
-    "winget already installed"
+    Write-Output "winget already installed"
 }
 
 #Configure WinGet
