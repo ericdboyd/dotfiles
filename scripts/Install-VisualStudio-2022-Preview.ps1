@@ -44,8 +44,8 @@
 #####################################################################
 
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "OzCode" -PackagePath "D:\WorkstationSetup\Visual Studio\Extensions\OzCode_4.0.0.22253.vsix" # OzCode
-Install-VS2022-Vsix -VSEdition "Preview" -PackageName "GitHub.GitHubExtensionforVisualStudio"
-Install-VS2022-Vsix -VSEdition "Preview" -PackageName "GitHub.Copilotvs"
+# Install-VS2022-Vsix -VSEdition "Preview" -PackageName "GitHub.GitHubExtensionforVisualStudio"
+# Install-VS2022-Vsix -VSEdition "Preview" -PackageName "GitHub.Copilotvs"
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "idex.vsthemepack"
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "ProBITools.MicrosoftReportProjectsforVisualStudio2022" # SSRS Projects
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "SSIS.MicrosoftDataToolsIntegrationServices"
@@ -81,7 +81,10 @@ Install-VS2022-Vsix -VSEdition "Preview" -PackageName "MadsKristensen.insertguid
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "MS-vsliveshare.vsls-vs-2022"
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "VisualStudioPlatformTeam.MatchMargin2022"
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "VisualStudioPlatformTeam.SolutionErrorVisualizer2022"
-Install-VS2022-Vsix -VSEdition "Preview" -PackageName "MadsKristensen.ExtensionManager2022" # Extension Manager 2022
+
+# Doesn't exist any more
+# Install-VS2022-Vsix -VSEdition "Preview" -PackageName "MadsKristensen.ExtensionManager2022" # Extension Manager 2022
+
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "MadsKristensen.Terraform"
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "MadsKristensen.Tweaks2022" # Tweaks 2022
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "MadsKristensen.RestClient"
@@ -102,7 +105,11 @@ Install-VS2022-Vsix -VSEdition "Preview" -PackageName "MadsKristensen.PresenterM
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "MattLaceyLtd.DemoSnippets"
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "ErikEJ.SQLServerCompactSQLiteToolbox" # SQLite and SQL Server Compact Toolbox
 Install-VS2022-Vsix -VSEdition "Preview" -PackageName "drewnoakes.SideScroller"
-Install-VS2022-Vsix -VSEdition "Preview" -PackageName "VisualStudioExptTeam.VSGitHubCopilot"
+
+Install-VS2022-Vsix -VSEdition "Preview" -PackageName "SemihOkur.AsyncFixer2022" # AsyncFixer"
+Install-VS2022-Vsix -VSEdition "Preview" -PackageName "PRIYANSHUAGRAWAL92.AsyncMethodNameFixer" # Async Method Name Fixer"
+
+# Install-VS2022-Vsix -VSEdition "Preview" -PackageName "VisualStudioExptTeam.VSGitHubCopilot"
 
 # Manual Install
 # Install-VS2022-Vsix -PackageName "VisualStudioPlatformTeam.ProductivityPowerPack2022"

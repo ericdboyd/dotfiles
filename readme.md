@@ -40,8 +40,10 @@ Login and authorize SnagIt and Camtasia
 #### Outlook
 
 Setup Outlook profile, email accounts, and manually point OST to appropriate location  
-Setup Signatures
-Setup Favorites
+
+These are now synced with Outlook cloud settings  
+<!-- Setup Signatures
+Setup Favorites -->
 
 #### Edge
 
@@ -67,6 +69,10 @@ Restore Backup
 
 ### DaVinci Resolve
 
+### Contour Design ShuttlePro v2
+
+Driver  
+Camtasia Profile  
 
 ### Utils
 

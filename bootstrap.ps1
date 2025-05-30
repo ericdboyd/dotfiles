@@ -60,7 +60,9 @@ if (-not (Get-InstalledModule -Name PowerShellGet -ErrorAction SilentlyContinue)
 $terminalAppsToInstall = @(
     
     @{id = "Microsoft.PowerShell" },     
-    @{name = "Microsoft.WindowsTerminal"; source = "msstore" }
+    # @{name = "Microsoft.WindowsTerminal"; source = "msstore" }
+    @{id = "Microsoft.WindowsTerminal" },
+    @{id ="Microsoft.WindowsTerminal.Preview"}
 )
 Install-WingetApps $terminalAppsToInstall
 
@@ -152,7 +154,8 @@ $appsToInstall = @(
     @{name = "LastPass"; id = "LastPass.LastPass"},
     @{id = "NordVPN"},
     @{name = "Discord"; id = "Discord.Discord"},
-    @{name = "WhatsApp"; id = "WhatsApp.WhatsApp"},
+    # @{name = "WhatsApp"; id = "WhatsApp.WhatsApp"},
+    @{name = "WhatsApp"; id = "9NKSQGP7F2NH"; source = "msstore"},
     @{name = "Zoom"; id = "Zoom.Zoom"},
     
     @{name = "Microsoft Edge Dev"; id = "Microsoft.Edge.Dev"},
@@ -249,6 +252,7 @@ $appsToInstall = @(
     @{name = "Messenger"; source = "msstore"; id = "9WZDNCRF0083"},
 
     @{name = "The Silver Searcher"},
+    @{id = "Warp.Warp"},
     
     @{id = "Ghisler.TotalCommander"},
     @{id = "GNU.MidnightCommander"},
@@ -275,7 +279,13 @@ $appsToInstall = @(
     @{id = "fzf"},
     @{name = "Microsoft To Do: Lists, Tasks & Reminders"; id = "9NBLGGH5R558"; source = "msstore"},
     @{name = "Microsoft Whiteboard"; id = "9MSPC6MP8FM4"; source = "msstore"},
-    @{name = "Microsoft Promptflow"; id = "Microsoft.Promptflow" }
+    @{name = "Microsoft Promptflow"; id = "Microsoft.Promptflow" },
+    @{name = "Zed Attack Proxy"; id="ZAP.ZAP"},
+    @{name = "Amass"; id="OWASP.Amass"},
+    @{name = "Nmap"; id="Insecure.Nmap"},
+
+    @{name = "Cursor"; id="Anysphere.Cursor"},
+    @{name = "qBittorrent"; id="qBittorrent.qBittorrent" }
 );
 
 Install-WingetApps $appsToInstall
