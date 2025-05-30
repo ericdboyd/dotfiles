@@ -2,7 +2,9 @@
 
 ## Bootstrap with Boxstarter
 
-[Launch Boxstarter](https://boxstarter.org/package/nr/url?https://raw.githubusercontent.com/ericdboyd/dotfiles/master/bootstrap.ps1)
+[Launch Boxstarter - Bootstrap Full](https://boxstarter.org/package/nr/url?https://raw.githubusercontent.com/ericdboyd/dotfiles/master/bootstrap.ps1)
+
+[Launch Boxstarter - Bootstrap Light](https://boxstarter.org/package/nr/url?https://raw.githubusercontent.com/ericdboyd/dotfiles/master/bootstrap-light.ps1)
 
 Install boxstarter:  
 . { iwr -useb http://boxstarter.org/bootstrapper.ps1 } | iex; Get-Boxstarter -Force
