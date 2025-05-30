@@ -96,8 +96,8 @@ $appsToInstall = @(
     # @{id = "Microsoft.AzureDataStudio"},
     @{name = "Azure Data CLI"; id = "Microsoft.Azure.DataCLI"},
     # @{name = "Azure Media Services Explorer"; id = "Microsoft.AzureMediaServicesExplorer" },
-    @{id = "Microsoft.ServiceFabricRuntime"},
-    @{name = "Service Fabric Explorer"; id = "Microsoft.ServiceFabricExplorer"},
+    # @{id = "Microsoft.ServiceFabricRuntime"},
+    # @{name = "Service Fabric Explorer"; id = "Microsoft.ServiceFabricExplorer"},
     @{name = "Azure Developer CLI"; id = "Microsoft.Azd"},
     @{name = "Azure VPN Client"; id = "9NP355QT2SQB"; source = "msstore" },
     @{id = "Microsoft.Azure.AztfExport"},
@@ -121,22 +121,22 @@ $appsToInstall = @(
     @{id = "Bitvise.SSH.Client"},
     @{id = "Microsoft.OpenSSH.Beta"},
     @{id = "Discord.Discord"},
-    @{name = "DisplayLink Manager"; id = "9N09F8V8FS02"; source = "msstore" },
-    @{name = "Lenovo Commercial Vantage"; id = "9NR5B8GVVM13"; source = "msstore"},
+    # @{name = "DisplayLink Manager"; id = "9N09F8V8FS02"; source = "msstore" },
+    # @{name = "Lenovo Commercial Vantage"; id = "9NR5B8GVVM13"; source = "msstore"},
     
-    @{id = "Microsoft.VisualStudio.2019.Enterprise"},
+    # @{id = "Microsoft.VisualStudio.2019.Enterprise"},
     # @{id = "Microsoft.VisualStudioCode" }, 
     # @{id = "Microsoft.VisualStudioCode.Insiders" },
 
-    @{id = "Insomnia.Insomnia"},
+    # @{id = "Insomnia.Insomnia"},
     @{id = "AutoHotkey.AutoHotkey"},
     
     @{id = "JanDeDobbeleer.OhMyPosh"},
 
     @{name = "Microsoft Teams"; id = "Microsoft.Teams"},
 
-    @{id = "Microsoft.BotFrameworkEmulator"},
-    @{id = "Microsoft.BotFrameworkComposer"},
+    # @{id = "Microsoft.BotFrameworkEmulator"},
+    # @{id = "Microsoft.BotFrameworkComposer"},
 
     @{id = "PortSwigger.BurpSuite.Community"},
     @{id = "PortSwigger.BurpSuite.Professional"},
@@ -180,7 +180,7 @@ $appsToInstall = @(
     @{name = "OneNote"; id = "XPFFZHVGQWWLHB"; source = "msstore" },
     @{name = "OneNote for Windows 10"; id = "9WZDNCRFHVJL"; source = "msstore" },
 
-    @{id = "OBSProject.OBSStudio"},
+    # @{id = "OBSProject.OBSStudio"},
     
     @{id = "Postman.Postman"},
     @{id = "WiresharkFoundation.Wireshark"},
@@ -209,10 +209,10 @@ $appsToInstall = @(
     # @{name = "JetBrains ReSharper"; id = "JetBrains.ReSharper"},
     @{id = "JetBrains.Toolbox"},
 
-    @{name = "Unity Hub"; id = "Unity.UnityHub"},
-    @{name = "Unity"; id = "Unity.Unity.2020"},
-    @{name = "Unity 2021"; id = "Unity.Unity.2021"},
-    @{name = "Unity 2022"; id = "Unity.Unity.2022"},
+    # @{name = "Unity Hub"; id = "Unity.UnityHub"},
+    # @{name = "Unity"; id = "Unity.Unity.2020"},
+    # @{name = "Unity 2021"; id = "Unity.Unity.2021"},
+    # @{name = "Unity 2022"; id = "Unity.Unity.2022"},
 
     @{id = "Microsoft.DotNet.SDK.Preview"},
     # @{id = "Microsoft.DotNet.SDK.7"},
@@ -232,7 +232,7 @@ $appsToInstall = @(
     @{id = "ShiningLight.OpenSSL"},
     @{id = "Oracle.JavaRuntimeEnvironment"},
     @{id = "Microsoft.WindowsPCHealthCheck"},
-    @{id = "mRemoteNG.mRemoteNG"},
+    # @{id = "mRemoteNG.mRemoteNG"},
 
     @{name = "Logitech G HUB"; id = "Logitech.GHUB"},
     @{id = "Logitech.CameraSettings"},
@@ -275,7 +275,7 @@ $appsToInstall = @(
     # @{name = "Dev Home GitHub Extension (Preview)"; id = "9NZCC27PR6N6"; source = "msstore"},
     # @{name = "Dev Home Azure Extension (Preview)"; id = "9MV8F79FGXTR"; source = "msstore"},
 
-    @{id = "Ultimaker.Cura"},
+    # @{id = "Ultimaker.Cura"},
     @{id = "fzf"},
     @{name = "Microsoft To Do: Lists, Tasks & Reminders"; id = "9NBLGGH5R558"; source = "msstore"},
     @{name = "Microsoft Whiteboard"; id = "9MSPC6MP8FM4"; source = "msstore"},
@@ -308,16 +308,16 @@ $elgatoApps = @(
     @{id = "Elgato.ControlCenter"},
     @{id = "Elgato.CameraHub"}
 )
-Install-WingetApps $elgatoApps
+# Install-WingetApps $elgatoApps
 
 $wslDistros = @(
     @{id = "Canonical.Ubuntu.2204"},
-    @{name = "openSUSE Leap 15.4"; source = "msstore"},
-    @{name = "openSUSE Tumbleweed"; source = "msstore"},
-    @{id = "kalilinux.kalilinux"},
-    @{id = "Debian.Debian"},
-    @{id = "SuperTux.SuperTux"},
-    @{id = "whitewaterfoundry.fedora-remix-for-wsl"}
+    # @{name = "openSUSE Leap 15.4"; source = "msstore"},
+    # @{name = "openSUSE Tumbleweed"; source = "msstore"},
+    @{id = "kalilinux.kalilinux"}
+    # @{id = "Debian.Debian"},
+    # @{id = "SuperTux.SuperTux"},
+    # @{id = "whitewaterfoundry.fedora-remix-for-wsl"}
 )
 Install-WingetApps $wslDistros
 
@@ -343,7 +343,7 @@ choco install filezilla
 # Spotify doesn't install in elevated mode in winget
 choco install spotify --force
 
-choco install mysql.workbench
+# choco install mysql.workbench
 
 # Install-Module Get-ChildItemColor -AllowClobber
 # Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
