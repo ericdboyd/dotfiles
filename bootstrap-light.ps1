@@ -79,7 +79,7 @@ Install-Module -Name Terminal-Icons -Repository PSGallery -Force -Scope CurrentU
 # PowerShell SSH connection manager
 Install-Module posh-sshell
 
-executeScript "Configure-WinGet.ps1";
+# executeScript "Configure-WinGet.ps1";
 
 #Install New apps
 Write-Output "Installing Apps"
